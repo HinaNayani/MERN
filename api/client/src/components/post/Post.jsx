@@ -5,6 +5,7 @@ import axios from "axios";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import { axiosInstance } from "../../config";
 
 export default function Post({ post }) {
   const [like, setLike] = useState(post.likes.length);
@@ -19,7 +20,7 @@ export default function Post({ post }) {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(`/users?userId=${post.userId}`);
+      const res = await axiosInstance.get(`/users?userId=${post.userId}`);
       setUser(res.data);
     };
     fetchUser();
@@ -27,7 +28,7 @@ export default function Post({ post }) {
 
   const likeHandler = () => {
     try {
-      axios.put("/posts/" + post._id + "/like", { userId: currentUser._id });
+      axiosInstance.put("/posts/" + post._id + "/like", { userId: currentUser._id });
     } catch (err) {}
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
@@ -64,12 +65,6 @@ export default function Post({ post }) {
             <img
               className="likeIcon"
               src={`${PF}like.png`}
-              onClick={likeHandler}
-              alt=""
-            />
-            <img
-              className="likeIcon"
-              src={`${PF}heart.png`}
               onClick={likeHandler}
               alt=""
             />
